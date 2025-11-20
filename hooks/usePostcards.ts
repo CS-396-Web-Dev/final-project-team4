@@ -13,7 +13,7 @@ const SEED_POSTCARDS: Postcard[] = [
     lat: null,
     lng: null,
     imageUrl:
-      "https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?auto=format&fit=crop&w=1200&q=80",
     description:
       "First time in Chicago! Sunrise over the Bean and Lake Michigan.",
     dateAdded: "2025-03-17T00:00:00.000Z",
@@ -25,7 +25,7 @@ const SEED_POSTCARDS: Postcard[] = [
     lat: null,
     lng: null,
     imageUrl:
-      "https://images.unsplash.com/photo-1521292270410-a8c53642e9d0?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?auto=format&fit=crop&w=1200&q=80",
     description: "Evening walk along the Thames with Big Ben in view.",
     dateAdded: "2025-06-10T00:00:00.000Z",
   },
