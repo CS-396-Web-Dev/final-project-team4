@@ -89,24 +89,25 @@ const MapPage: NextPage = () => {
         )}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Map Section */}
-        <section aria-labelledby="map-heading" className="lg:col-span-2">
-          <h2 id="map-heading" className="sr-only">
-            Interactive map of postcard locations
-          </h2>
-          <div className="w-full h-[600px]">
-            <PostcardMap postcards={filteredPostcards} />
-          </div>
-        </section>
+      {/* Conditional layout: full width if no search, grid if search results */}
+      {searchQuery && filteredPostcards.length > 0 ? (
+        <div className="grid grid-cols-1 xl:grid-cols-4 gap-6">
+          {/* Map Section with sidebar */}
+          <section aria-labelledby="map-heading" className="xl:col-span-3">
+            <h2 id="map-heading" className="sr-only">
+              Interactive map of postcard locations
+            </h2>
+            <div className="w-full h-[500px] md:h-[650px] lg:h-[750px]">
+              <PostcardMap postcards={filteredPostcards} />
+            </div>
+          </section>
 
-        {/* Filtered Postcards List */}
-        {searchQuery && filteredPostcards.length > 0 && (
-          <aside aria-labelledby="results-heading" className="lg:col-span-1">
+          {/* Filtered Postcards List */}
+          <aside aria-labelledby="results-heading" className="xl:col-span-1">
             <h2 id="results-heading" className="text-lg font-semibold mb-3">
               Search Results ({filteredPostcards.length})
             </h2>
-            <ul className="space-y-3 max-h-[600px] overflow-y-auto">
+            <ul className="space-y-3 max-h-[500px] md:max-h-[650px] lg:max-h-[750px] overflow-y-auto">
               {filteredPostcards.map((postcard) => (
                 <li key={postcard.id}>
                   <Link
@@ -136,8 +137,18 @@ const MapPage: NextPage = () => {
               ))}
             </ul>
           </aside>
-        )}
-      </div>
+        </div>
+      ) : (
+        /* Full width map when no search */
+        <section aria-labelledby="map-heading">
+          <h2 id="map-heading" className="sr-only">
+            Interactive map of postcard locations
+          </h2>
+          <div className="w-full h-[500px] md:h-[650px] lg:h-[750px] xl:h-[800px]">
+            <PostcardMap postcards={filteredPostcards} />
+          </div>
+        </section>
+      )}
     </>
   );
 };

@@ -40,8 +40,8 @@ export const PostcardMap: React.FC<PostcardMapProps> = ({ postcards }) => {
     <MapContainer
       center={center}
       zoom={zoom}
-      style={{ height: "100%", width: "100%", minHeight: "500px" }}
-      className="rounded-lg shadow-md"
+      style={{ height: "100%", width: "100%" }}
+      className="rounded-lg shadow-lg"
     >
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -62,10 +62,10 @@ export const PostcardMap: React.FC<PostcardMapProps> = ({ postcards }) => {
                   />
                 )}
                 <h3 className="font-semibold text-lg mb-1">{postcard.title}</h3>
-                <p className="text-sm text-gray-600 mb-2">{postcard.location}</p>
+                <p className="text-sm text-gray-600 mb-1">{postcard.location}</p>
                 <Link
                   href={`/post/${postcard.id}`}
-                  className="inline-block px-3 py-1 bg-blue-500 text-white text-sm rounded hover:bg-blue-600 transition-colors"
+                  className="text-blue-600 hover:text-blue-800 underline text-sm"
                 >
                   View Details
                 </Link>
