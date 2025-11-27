@@ -49,9 +49,14 @@ export const PostcardMap: React.FC<PostcardMapProps> = ({ postcards }) => {
       />
       {mappablePostcards.map((postcard) => {
         if (postcard.lat === null || postcard.lng === null) return null;
-        
+
         return (
-          <Marker key={postcard.id} position={[postcard.lat, postcard.lng]}>
+          <Marker
+            key={postcard.id}
+            position={[postcard.lat, postcard.lng]}
+            keyboard={true}
+            title={postcard.location} 
+          >
             <Popup>
               <div className="p-2 min-w-[200px]">
                 {postcard.imageUrl && (
@@ -74,6 +79,7 @@ export const PostcardMap: React.FC<PostcardMapProps> = ({ postcards }) => {
           </Marker>
         );
       })}
+
     </MapContainer>
   );
 };

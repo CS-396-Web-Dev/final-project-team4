@@ -15,6 +15,7 @@ export const PostcardCard: FC<PostcardCardProps> = ({ postcard }) => {
       <Link
         href={`/post/${postcard.id}`}
         className="block rounded-lg border border-gray-200 bg-white shadow-sm transition-shadow hover:shadow-md"
+        aria-label={`Title: ${postcard.title}, Location: ${postcard.location}, Date: ${formattedDate}`}
       >
         <img
           src={postcard.imageUrl}
@@ -28,6 +29,7 @@ export const PostcardCard: FC<PostcardCardProps> = ({ postcard }) => {
           <p className="mt-1 text-sm text-gray-600">{postcard.location}</p>
           <p className="mt-1 text-xs text-gray-500">{formattedDate}</p>
         </div>
+        <span className="sr-only">View details for {postcard.title}</span>
       </Link>
     </li>
   );

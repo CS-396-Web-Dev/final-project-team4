@@ -233,3 +233,6 @@ Outcome:
 - Sorting A - Z, Z - A, by date
 - View details of postcards
 
+## Prompt
+Asked about how to enable focusing on various elements of each web page, such as various subheadings when clicking on postcards.
+Outcome: Headers and text within are both read outloud, and when tabbing through points on map, the locations are also read out.
