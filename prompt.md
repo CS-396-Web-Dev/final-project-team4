@@ -103,25 +103,25 @@ Outcome:  Removed MainNav import and usage from `pages/map.tsx` since Layout alr
 ## Prompt 
 "I need to refactor the postcard collection UI to use a sidebar navigation layout. The main content area should display two separate horizontal-scrolling sections: 'Current Collection' (visited postcards with dates) and 'Future Collection' (bucketlist items without dates). Postcards should be categorized by a category field ('visited' or 'bucketlist'), and the seed data should include this field. Update the Layout component to include a left sidebar with icon-based navigation, and modify the home page to render the two collection sections with horizontal scrolling. Ensure the postcard cards are sized consistently for the horizontal layout.
 Outcomes:
-Sidebar navigation with icons implemented
-Two collection sections (Current/Future) with horizontal scrolling
-Postcard type extended with category field
-Seed data updated with 9 postcards (3 visited, 6 bucketlist)
-Postcard cards redesigned for horizontal layout with proper date formatting
+- Sidebar navigation with icons implemented
+- Two collection sections (Current/Future) with horizontal scrolling
+- Postcard type extended with category field
+- Seed data updated with 9 postcards (3 visited, 6 bucketlist)
+- Postcard cards redesigned for horizontal layout with proper date formatting
 Issues Fixed:
-Migration logic was re-adding deleted seed postcards — fixed by tracking migration completion in localStorage and preventing re-runs
-Add postcard wasn't persisting — fixed by ensuring localStorage sync before navigation
-Back button navigation wasn't working — switched from Link to button with router.push and error handling
-Las Vegas image URL was incorrect — updated to a working Unsplash URL
-useLocalStorage hook was reloading on remount and overwriting deletes — fixed by only loading on initial mount with a ref flag
+- Migration logic was re-adding deleted seed postcards — fixed by tracking migration completion in localStorage and preventing re-runs
+- Add postcard wasn't persisting — fixed by ensuring localStorage sync before navigation
+- Back button navigation wasn't working — switched from Link to button with router.push and error handling
+- Las Vegas image URL was incorrect — updated to a working Unsplash URL
+- useLocalStorage hook was reloading on remount and overwriting deletes — fixed by only loading on initial mount with a ref flag
 ## Prompt 
 "Implement a dark mode toggle that persists user preference in localStorage and applies dark mode classes across all components. The toggle should be in the top-right header, and all UI elements (sidebar, cards, forms, buttons) need dark mode variants. Use Tailwind's class-based dark mode strategy, and ensure the theme preference loads correctly on initial render to avoid flash.
 Outcomes:
-Dark mode toggle button in header (switches between "Dark"/"Light" text)
-Preference persisted in localStorage
-Dark mode classes added to all components (Layout, PostcardCard, forms, buttons, navigation)
-Tailwind config updated with darkMode: 'class'
-Theme loads on mount without flash
+- Dark mode toggle button in header (switches between "Dark"/"Light" text)
+- Preference persisted in localStorage
+- Dark mode classes added to all components (Layout, PostcardCard, forms, buttons, navigation)
+- Tailwind config updated with darkMode: 'class'
+- Theme loads on mount without flash
 
 
 

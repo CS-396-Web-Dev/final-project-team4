@@ -59,18 +59,42 @@ const PostcardDetailPage: NextPage = () => {
           </figcaption>
         </figure>
 
-        <dl className="mt-6 space-y-4">
-          <div>
-            <dt className="text-sm font-medium text-gray-500">Location</dt>
-            <dd className="mt-1 text-base text-gray-900">{postcard.location}</dd>
+         <dl className="mt-6 space-y-4">
+          <div role="group" aria-labelledby="label-location">
+            <dt id="label-location" className="text-sm font-medium text-gray-500">
+              Location
+            </dt>
+            <dd
+              tabIndex={0}
+              aria-label={`Location: ${postcard.location}`}
+              className="mt-1 text-base text-gray-900"
+            >
+              {postcard.location}
+            </dd>
           </div>
-          <div>
-            <dt className="text-sm font-medium text-gray-500">Date Added</dt>
-            <dd className="mt-1 text-base text-gray-900">{formattedDate}</dd>
+
+          <div role="group" aria-labelledby="label-date">
+            <dt id="label-date" className="text-sm font-medium text-gray-500">
+              Date Added
+            </dt>
+            <dd
+              tabIndex={0}
+              aria-label={`Date Added: ${formattedDate}`}
+              className="mt-1 text-base text-gray-900"
+            >
+              {formattedDate}
+            </dd>
           </div>
-          <div>
-            <dt className="text-sm font-medium text-gray-500">Description</dt>
-            <dd className="mt-1 text-base text-gray-900">
+
+          <div role="group" aria-labelledby="label-description">
+            <dt id="label-description" className="text-sm font-medium text-gray-500">
+              Description
+            </dt>
+            <dd
+              tabIndex={0}
+              aria-label={`Description: ${postcard.description}`}
+              className="mt-1 text-base text-gray-900"
+            >
               {postcard.description}
             </dd>
           </div>
