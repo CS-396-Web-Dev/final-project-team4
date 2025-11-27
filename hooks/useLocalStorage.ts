@@ -1,21 +1,32 @@
 // hooks/useLocalStorage.ts
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 export function useLocalStorage<T>(key: string, defaultValue: T) {
   const [value, setValue] = useState<T>(defaultValue);
+  const isInitialMount = useRef(true);
 
-  // Load from localStorage on mount
+  // Load from localStorage ONLY on initial mount
   useEffect(() => {
     if (typeof window === "undefined") {
       return;
     }
 
+    // Only load on the very first mount
+    if (!isInitialMount.current) {
+      return;
+    }
+    isInitialMount.current = false;
+
     try {
       const stored = window.localStorage.getItem(key);
       if (stored !== null) {
-        setValue(JSON.parse(stored) as T);
+        const parsed = JSON.parse(stored) as T;
+        setValue(parsed);
+        console.log(`useLocalStorage: loaded from localStorage on mount, count:`, Array.isArray(parsed) ? parsed.length : 'N/A');
       } else {
+        console.log(`useLocalStorage: localStorage empty, setting default`);
         window.localStorage.setItem(key, JSON.stringify(defaultValue));
+        setValue(defaultValue);
       }
     } catch (error) {
       // If anything goes wrong, fall back to the default value
@@ -25,14 +36,15 @@ export function useLocalStorage<T>(key: string, defaultValue: T) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [key]);
 
-  // Persist to localStorage whenever value changes
+  // Persist to localStorage whenever value changes (but skip on initial mount)
   useEffect(() => {
-    if (typeof window === "undefined") {
+    if (typeof window === "undefined" || isInitialMount.current) {
       return;
     }
 
     try {
       window.localStorage.setItem(key, JSON.stringify(value));
+      console.log(`useLocalStorage: saved to localStorage, count:`, Array.isArray(value) ? value.length : 'N/A');
     } catch (error) {
       console.error(`useLocalStorage: error saving key "${key}"`, error);
     }

@@ -19,9 +19,9 @@ const PostcardDetailPage: NextPage = () => {
         <Head>
           <title>Postcard App – Postcard Not Found</title>
         </Head>
-        <div>
+        <div className="text-gray-900 dark:text-white">
           <p>Postcard not found.</p>
-          <Link href="/" className="text-indigo-600 hover:text-indigo-800">
+          <Link href="/" className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300">
             Back to Home
           </Link>
         </div>
@@ -54,36 +54,54 @@ const PostcardDetailPage: NextPage = () => {
             alt={postcard.title}
             className="w-full rounded-lg object-cover"
           />
-          <figcaption className="mt-2 text-sm text-gray-600">
+          <figcaption className="mt-2 text-sm text-gray-600 dark:text-gray-400">
             {postcard.title}
           </figcaption>
         </figure>
 
         <dl className="mt-6 space-y-4">
           <div>
-            <dt className="text-sm font-medium text-gray-500">Location</dt>
-            <dd className="mt-1 text-base text-gray-900">{postcard.location}</dd>
+            <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Location</dt>
+            <dd className="mt-1 text-base text-gray-900 dark:text-white">{postcard.location}</dd>
           </div>
           <div>
-            <dt className="text-sm font-medium text-gray-500">Date Added</dt>
-            <dd className="mt-1 text-base text-gray-900">{formattedDate}</dd>
+            <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Date Added</dt>
+            <dd className="mt-1 text-base text-gray-900 dark:text-white">{formattedDate}</dd>
           </div>
           <div>
-            <dt className="text-sm font-medium text-gray-500">Description</dt>
-            <dd className="mt-1 text-base text-gray-900">
+            <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Description</dt>
+            <dd className="mt-1 text-base text-gray-900 dark:text-white">
               {postcard.description}
             </dd>
           </div>
         </dl>
 
         <div className="mt-6 flex gap-4">
-          <Link
-            href="/"
-            className="rounded-md bg-gray-200 px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+          <button
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              console.log("Back button clicked, router:", router);
+              console.log("Attempting to navigate to /");
+              // Use window.location as fallback
+              if (router && router.push) {
+                router.push("/").catch((err) => {
+                  console.error("Router push failed:", err);
+                  window.location.href = "/";
+                });
+              } else {
+                console.log("Router not available, using window.location");
+                window.location.href = "/";
+              }
+            }}
+            style={{ cursor: "pointer", zIndex: 10 }}
+            className="rounded-md bg-gray-200 dark:bg-gray-700 px-4 py-2 text-sm font-medium text-gray-900 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
           >
             Back to Home
-          </Link>
+          </button>
           <button
+            type="button"
             onClick={handleDelete}
             className="rounded-md bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
           >

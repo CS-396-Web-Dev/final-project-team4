@@ -8,5 +8,6 @@ export type Postcard = {
     imageUrl: string;
     description: string;
     dateAdded: string; // ISO date string
+    category: "visited" | "bucketlist"; // Whether this is a visited place or a future destination
   };
   

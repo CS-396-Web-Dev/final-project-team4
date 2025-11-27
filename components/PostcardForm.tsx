@@ -19,6 +19,9 @@ export const PostcardForm: FC<PostcardFormProps> = ({
   const [description, setDescription] = useState(
     initialValues?.description || "",
   );
+  const [category, setCategory] = useState<"visited" | "bucketlist">(
+    initialValues?.category || "visited",
+  );
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -27,13 +30,14 @@ export const PostcardForm: FC<PostcardFormProps> = ({
       location,
       imageUrl,
       description,
+      category,
     });
   };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div>
-        <label htmlFor="title" className="block text-sm font-medium text-gray-700">
+        <label htmlFor="title" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
           Title
         </label>
         <input
@@ -42,14 +46,14 @@ export const PostcardForm: FC<PostcardFormProps> = ({
           required
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500"
+          className="mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white px-3 py-2 shadow-sm focus:border-indigo-500 dark:focus:border-indigo-400 focus:outline-none focus:ring-indigo-500"
         />
       </div>
 
       <div>
         <label
           htmlFor="location"
-          className="block text-sm font-medium text-gray-700"
+          className="block text-sm font-medium text-gray-700 dark:text-gray-300"
         >
           Location
         </label>
@@ -59,14 +63,14 @@ export const PostcardForm: FC<PostcardFormProps> = ({
           required
           value={location}
           onChange={(e) => setLocation(e.target.value)}
-          className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500"
+          className="mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white px-3 py-2 shadow-sm focus:border-indigo-500 dark:focus:border-indigo-400 focus:outline-none focus:ring-indigo-500"
         />
       </div>
 
       <div>
         <label
           htmlFor="imageUrl"
-          className="block text-sm font-medium text-gray-700"
+          className="block text-sm font-medium text-gray-700 dark:text-gray-300"
         >
           Image URL
         </label>
@@ -76,14 +80,14 @@ export const PostcardForm: FC<PostcardFormProps> = ({
           required
           value={imageUrl}
           onChange={(e) => setImageUrl(e.target.value)}
-          className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500"
+          className="mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white px-3 py-2 shadow-sm focus:border-indigo-500 dark:focus:border-indigo-400 focus:outline-none focus:ring-indigo-500"
         />
         {imageUrl && (
           <div className="mt-4">
             <img
               src={imageUrl}
               alt="Preview"
-              className="h-48 w-full rounded-lg object-cover border border-gray-200"
+              className="h-48 w-full rounded-lg object-cover border border-gray-200 dark:border-gray-700"
             />
           </div>
         )}
@@ -92,7 +96,7 @@ export const PostcardForm: FC<PostcardFormProps> = ({
       <div>
         <label
           htmlFor="description"
-          className="block text-sm font-medium text-gray-700"
+          className="block text-sm font-medium text-gray-700 dark:text-gray-300"
         >
           Description
         </label>
@@ -102,8 +106,27 @@ export const PostcardForm: FC<PostcardFormProps> = ({
           rows={4}
           value={description}
           onChange={(e) => setDescription(e.target.value)}
-          className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500"
+          className="mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white px-3 py-2 shadow-sm focus:border-indigo-500 dark:focus:border-indigo-400 focus:outline-none focus:ring-indigo-500"
         />
+      </div>
+
+      <div>
+        <label
+          htmlFor="category"
+          className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+        >
+          Category
+        </label>
+        <select
+          id="category"
+          required
+          value={category}
+          onChange={(e) => setCategory(e.target.value as "visited" | "bucketlist")}
+          className="mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white px-3 py-2 shadow-sm focus:border-indigo-500 dark:focus:border-indigo-400 focus:outline-none focus:ring-indigo-500"
+        >
+          <option value="visited">Visited</option>
+          <option value="bucketlist">Bucketlist</option>
+        </select>
       </div>
 
       <div>

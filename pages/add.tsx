@@ -11,15 +11,41 @@ const AddPostcardPage: NextPage = () => {
   const { addPostcard } = usePostcards();
 
   const handleSubmit = (postcardInput: Omit<Postcard, "id" | "dateAdded" | "lat" | "lng">) => {
+    console.log("Form submitted with data:", postcardInput);
+    
     const newPostcard: Postcard = {
       ...postcardInput,
       id: crypto.randomUUID(),
       dateAdded: new Date().toISOString(),
       lat: null,
       lng: null,
+      category: postcardInput.category || "visited",
     };
-    addPostcard(newPostcard);
-    router.push("/");
+    
+    console.log("New postcard created:", newPostcard);
+    
+    // Add the postcard - this updates state and localStorage via useLocalStorage hook
+    try {
+      addPostcard(newPostcard);
+      console.log("addPostcard called successfully");
+      
+      // Check localStorage immediately after
+      if (typeof window !== "undefined") {
+        const stored = window.localStorage.getItem("postcards");
+        console.log("LocalStorage after add:", stored ? JSON.parse(stored).length : "empty");
+      }
+    } catch (error) {
+      console.error("Error adding postcard:", error);
+    }
+    
+    // Small delay to ensure React state and localStorage are synced before navigation
+    setTimeout(() => {
+      console.log("Navigating to home page");
+      router.push("/").catch((err) => {
+        console.error("Router push error:", err);
+        window.location.href = "/";
+      });
+    }, 100);
   };
 
   return (
@@ -32,7 +58,7 @@ const AddPostcardPage: NextPage = () => {
         />
       </Head>
       <header className="mb-6">
-        <h1 className="text-3xl font-semibold tracking-tight">
+        <h1 className="text-3xl font-semibold tracking-tight text-gray-900 dark:text-white">
           Add a Postcard
         </h1>
       </header>
