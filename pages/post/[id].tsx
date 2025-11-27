@@ -59,18 +59,36 @@ const PostcardDetailPage: NextPage = () => {
           </figcaption>
         </figure>
 
-        <dl className="mt-6 space-y-4">
+         <dl className="mt-6 space-y-4">
           <div>
             <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Location</dt>
-            <dd className="mt-1 text-base text-gray-900 dark:text-white">{postcard.location}</dd>
+            <dd
+              tabIndex={0}
+              aria-label={`Location: ${postcard.location}`}
+              className="mt-1 text-base text-gray-900 dark:text-white"
+            >
+              {postcard.location}
+            </dd>
           </div>
+
           <div>
             <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Date Added</dt>
-            <dd className="mt-1 text-base text-gray-900 dark:text-white">{formattedDate}</dd>
+            <dd
+              tabIndex={0}
+              aria-label={`Date Added: ${formattedDate}`}
+              className="mt-1 text-base text-gray-900 dark:text-white"
+            >
+              {formattedDate}
+            </dd>
           </div>
+
           <div>
             <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Description</dt>
-            <dd className="mt-1 text-base text-gray-900 dark:text-white">
+            <dd
+              tabIndex={0}
+              aria-label={`Description: ${postcard.description}`}
+              className="mt-1 text-base text-gray-900 dark:text-white"
+            >
               {postcard.description}
             </dd>
           </div>
@@ -100,6 +118,12 @@ const PostcardDetailPage: NextPage = () => {
           >
             Back to Home
           </button>
+          <Link
+            href={`/edit/${postcard.id}`}
+            className="rounded-md bg-gray-500 dark:bg-gray-600 px-4 py-2 text-sm font-medium text-white hover:bg-gray-600 dark:hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2"
+          >
+            Edit
+          </Link>
           <button
             type="button"
             onClick={handleDelete}

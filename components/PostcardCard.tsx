@@ -29,6 +29,7 @@ export const PostcardCard: FC<PostcardCardProps> = ({ postcard, showDate = true 
       <Link
         href={`/post/${postcard.id}`}
         className="block w-64 rounded-lg overflow-hidden bg-white dark:bg-gray-800 transition-shadow hover:shadow-lg"
+        aria-label={`Title: ${postcard.title}, Location: ${postcard.location}, Date: ${showDate && postcard.category === "visited" ? formatDate(postcard.dateAdded) : "N/A"}`}
       >
         <img
           src={postcard.imageUrl}
@@ -47,6 +48,7 @@ export const PostcardCard: FC<PostcardCardProps> = ({ postcard, showDate = true 
             </p>
           )}
         </div>
+        <span className="sr-only">View details for {postcard.title}</span>
       </Link>
     </div>
   );

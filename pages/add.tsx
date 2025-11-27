@@ -1,6 +1,7 @@
 // pages/add.tsx
 import Head from "next/head";
 import { useRouter } from "next/router";
+import { useState } from "react";
 import type { NextPage } from "next";
 import { usePostcards } from "../hooks/usePostcards";
 import { PostcardForm } from "../components/PostcardForm";
@@ -10,42 +11,31 @@ const AddPostcardPage: NextPage = () => {
   const router = useRouter();
   const { addPostcard } = usePostcards();
 
-  const handleSubmit = (postcardInput: Omit<Postcard, "id" | "dateAdded" | "lat" | "lng">) => {
-    console.log("Form submitted with data:", postcardInput);
+  const handleSubmit = (
+    postcardInput: Omit<Postcard, "id" | "dateAdded" | "lat" | "lng">,
+    coords: { lat: number; lng: number } | null,
+    date?: string
+  ) => {
+    // Convert YYYY-MM-DD to ISO string
+    const dateAdded = date ? new Date(date).toISOString() : new Date().toISOString();
     
     const newPostcard: Postcard = {
       ...postcardInput,
       id: crypto.randomUUID(),
-      dateAdded: new Date().toISOString(),
-      lat: null,
-      lng: null,
+      dateAdded,
+      lat: coords?.lat ?? null,
+      lng: coords?.lng ?? null,
       category: postcardInput.category || "visited",
     };
     
-    console.log("New postcard created:", newPostcard);
-    
-    // Add the postcard - this updates state and localStorage via useLocalStorage hook
-    try {
-      addPostcard(newPostcard);
-      console.log("addPostcard called successfully");
-      
-      // Check localStorage immediately after
-      if (typeof window !== "undefined") {
-        const stored = window.localStorage.getItem("postcards");
-        console.log("LocalStorage after add:", stored ? JSON.parse(stored).length : "empty");
-      }
-    } catch (error) {
-      console.error("Error adding postcard:", error);
+    addPostcard(newPostcard);
+
+    // Redirect to map if location found, otherwise home
+    if (coords) {
+      router.push("/map");
+    } else {
+      router.push("/");
     }
-    
-    // Small delay to ensure React state and localStorage are synced before navigation
-    setTimeout(() => {
-      console.log("Navigating to home page");
-      router.push("/").catch((err) => {
-        console.error("Router push error:", err);
-        window.location.href = "/";
-      });
-    }, 100);
   };
 
   return (
@@ -67,6 +57,7 @@ const AddPostcardPage: NextPage = () => {
         <h2 id="add-form-heading" className="sr-only">
           Add postcard form
         </h2>
+
         <PostcardForm onSubmit={handleSubmit} />
       </section>
     </>

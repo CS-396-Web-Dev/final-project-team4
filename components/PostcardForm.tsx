@@ -1,12 +1,13 @@
 // components/PostcardForm.tsx
 import { useState, type FC, type FormEvent } from "react";
 import type { Postcard } from "../types/postcard";
+import { LocationSearchInput } from "./LocationSearchInput";
 
 type PostcardInput = Omit<Postcard, "id" | "dateAdded" | "lat" | "lng">;
 
 type PostcardFormProps = {
-  initialValues?: PostcardInput;
-  onSubmit: (postcard: PostcardInput) => void;
+  initialValues?: PostcardInput & { dateAdded?: string };
+  onSubmit: (postcard: PostcardInput, coords: { lat: number; lng: number } | null, date?: string) => void;
 };
 
 export const PostcardForm: FC<PostcardFormProps> = ({
@@ -22,16 +23,64 @@ export const PostcardForm: FC<PostcardFormProps> = ({
   const [category, setCategory] = useState<"visited" | "bucketlist">(
     initialValues?.category || "visited",
   );
+  const [date, setDate] = useState(() => {
+    // Use initial date if provided, otherwise default to today
+    if (initialValues?.dateAdded) {
+      return new Date(initialValues.dateAdded).toISOString().split('T')[0];
+    }
+    return new Date().toISOString().split('T')[0];
+  });
+  const [locationCoords, setLocationCoords] = useState<{ lat: number; lng: number } | null>(null);
+  const [imageSource, setImageSource] = useState<"url" | "upload">("url");
+  const [uploadError, setUploadError] = useState<string | null>(null);
+
+  const handleLocationChange = (newLocation: string, coords: { lat: number; lng: number } | null) => {
+    setLocation(newLocation);
+    setLocationCoords(coords);
+  };
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Check file type
+    if (!file.type.startsWith('image/')) {
+      setUploadError('Please upload an image file');
+      return;
+    }
+
+    // Check file size (max 2MB to avoid localStorage limits)
+    if (file.size > 2 * 1024 * 1024) {
+      setUploadError('Image must be smaller than 2MB');
+      return;
+    }
+
+    setUploadError(null);
+
+    // Convert to base64
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setImageUrl(reader.result as string);
+    };
+    reader.onerror = () => {
+      setUploadError('Failed to read image file');
+    };
+    reader.readAsDataURL(file);
+  };
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    onSubmit({
-      title,
-      location,
-      imageUrl,
-      description,
-      category,
-    });
+    onSubmit(
+      {
+        title,
+        location,
+        imageUrl,
+        description,
+        category,
+      },
+      locationCoords,
+      date
+    );
   };
 
   return (
@@ -57,37 +106,89 @@ export const PostcardForm: FC<PostcardFormProps> = ({
         >
           Location
         </label>
-        <input
-          type="text"
-          id="location"
-          required
+        <LocationSearchInput
           value={location}
-          onChange={(e) => setLocation(e.target.value)}
+          onChange={handleLocationChange}
           className="mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white px-3 py-2 shadow-sm focus:border-indigo-500 dark:focus:border-indigo-400 focus:outline-none focus:ring-indigo-500"
         />
       </div>
 
       <div>
-        <label
-          htmlFor="imageUrl"
-          className="block text-sm font-medium text-gray-700 dark:text-gray-300"
-        >
-          Image URL
+        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          Image
         </label>
-        <input
-          type="url"
-          id="imageUrl"
-          required
-          value={imageUrl}
-          onChange={(e) => setImageUrl(e.target.value)}
-          className="mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white px-3 py-2 shadow-sm focus:border-indigo-500 dark:focus:border-indigo-400 focus:outline-none focus:ring-indigo-500"
-        />
+        
+        {/* Toggle between URL and Upload */}
+        <div className="flex gap-2 mb-3">
+          <button
+            type="button"
+            onClick={() => {
+              setImageSource("url");
+              setUploadError(null);
+            }}
+            className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
+              imageSource === "url"
+                ? "bg-indigo-600 text-white"
+                : "bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600"
+            }`}
+          >
+            Image URL
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setImageSource("upload");
+              setImageUrl("");
+              setUploadError(null);
+            }}
+            className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
+              imageSource === "upload"
+                ? "bg-indigo-600 text-white"
+                : "bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600"
+            }`}
+          >
+            Upload Image
+          </button>
+        </div>
+
+        {/* Show URL input or file upload based on selection */}
+        {imageSource === "url" ? (
+          <input
+            type="url"
+            id="imageUrl"
+            required
+            value={imageUrl}
+            onChange={(e) => setImageUrl(e.target.value)}
+            placeholder="https://example.com/image.jpg"
+            className="block w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white px-3 py-2 shadow-sm focus:border-indigo-500 dark:focus:border-indigo-400 focus:outline-none focus:ring-indigo-500"
+          />
+        ) : (
+          <div>
+            <input
+              type="file"
+              id="imageUpload"
+              accept="image/*"
+              onChange={handleImageUpload}
+              required={!imageUrl}
+              className="block w-full text-sm text-gray-500 dark:text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 dark:file:bg-indigo-900 file:text-indigo-700 dark:file:text-indigo-300 hover:file:bg-indigo-100 dark:hover:file:bg-indigo-800"
+            />
+            <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+              Max file size: 2MB. Supports JPG, PNG, GIF, WebP.
+            </p>
+          </div>
+        )}
+
+        {uploadError && (
+          <p className="mt-2 text-sm text-red-600 dark:text-red-400">{uploadError}</p>
+        )}
+
         {imageUrl && (
           <div className="mt-4">
             <img
               src={imageUrl}
               alt="Preview"
               className="h-48 w-full rounded-lg object-cover border border-gray-200 dark:border-gray-700"
+              onError={() => setUploadError("Failed to load image")}
             />
           </div>
         )}
@@ -95,18 +196,35 @@ export const PostcardForm: FC<PostcardFormProps> = ({
 
       <div>
         <label
+          htmlFor="date"
+          className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+        >
+          Date
+        </label>
+        <input
+          type="date"
+          id="date"
+          value={date}
+          onChange={(e) => setDate(e.target.value)}
+          className="mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white px-3 py-2 shadow-sm focus:border-indigo-500 dark:focus:border-indigo-400 focus:outline-none focus:ring-indigo-500"
+        />
+        <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">Defaults to today's date</p>
+      </div>
+
+      <div>
+        <label
           htmlFor="description"
           className="block text-sm font-medium text-gray-700 dark:text-gray-300"
         >
-          Description
+          Description <span className="text-gray-400 dark:text-gray-500 font-normal">(optional)</span>
         </label>
         <textarea
           id="description"
-          required
           rows={4}
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           className="mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white px-3 py-2 shadow-sm focus:border-indigo-500 dark:focus:border-indigo-400 focus:outline-none focus:ring-indigo-500"
+          placeholder="Share your memories about this place..."
         />
       </div>
 
@@ -140,4 +258,3 @@ export const PostcardForm: FC<PostcardFormProps> = ({
     </form>
   );
 };
-
