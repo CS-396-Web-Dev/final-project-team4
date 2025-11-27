@@ -10,8 +10,8 @@ const SEED_POSTCARDS: Postcard[] = [
     id: "chicago-1",
     title: "Chicago",
     location: "Chicago, Illinois, USA",
-    lat: null,
-    lng: null,
+    lat: 41.8832,
+    lng: -87.6324,
     imageUrl:
       "https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?auto=format&fit=crop&w=1200&q=80",
     description:
@@ -22,8 +22,8 @@ const SEED_POSTCARDS: Postcard[] = [
     id: "london-1",
     title: "London",
     location: "London, United Kingdom",
-    lat: null,
-    lng: null,
+    lat: 51.5072,
+    lng: -0.1276,
     imageUrl:
       "https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?auto=format&fit=crop&w=1200&q=80",
     description: "Evening walk along the Thames with Big Ben in view.",
